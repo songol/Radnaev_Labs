@@ -1,0 +1,3 @@
+/home/songol/Suralsal/C++_2018_NSU/lab01/CMakeFiles/rebuild_cache.dir
+/home/songol/Suralsal/C++_2018_NSU/lab01/CMakeFiles/lab01.dir
+/home/songol/Suralsal/C++_2018_NSU/lab01/CMakeFiles/edit_cache.dir

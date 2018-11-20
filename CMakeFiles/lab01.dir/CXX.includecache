@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/songol/Suralsal/C++_2018_NSU/lab01/main.cpp
+stdio.h
+-
+iostream
+-
+vector
+-
+fstream
+-
+string
+-
+map
+-
+algorithm
+-
+iomanip
+-
+
