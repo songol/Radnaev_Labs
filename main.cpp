@@ -7,8 +7,8 @@ constexpr double f1(double x) {
     return x * x + x + 1;
 }
 
-TEST(f, _1times1) {
-    EXPECT_EQ(2, 2 * 2 + 2 + 1);
+TEST(f, function_test) {
+    EXPECT_EQ(2 * 2 + 2 + 1, f1(2));
 }
 
 constexpr double integration(double left, 
@@ -23,8 +23,8 @@ constexpr double integration(double left,
     return res;
 }
 
-TEST(integration, integration) {
-    EXPECT_LT(20 / 3, integration(0, 2, 1000, f1));
+TEST(integration, integration_test) {
+    EXPECT_EQ(20 / 3, integration(0, 2, 1000, f1));
 }
 
 int main(int argc, char** argv) {
