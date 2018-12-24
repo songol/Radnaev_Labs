@@ -31,7 +31,6 @@ TEST(integration, integration_test) {
 int main(int argc, char** argv) {
     constexpr auto intergral = integration(0, 2, 1000, f1);
     std::cout << "integration = " << intergral << std::endl;
-    return 0;
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
