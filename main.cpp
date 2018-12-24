@@ -24,7 +24,8 @@ constexpr double integration(double left,
 }
 
 TEST(integration, integration_test) {
-    EXPECT_EQ(20 / 3, integration(0, 2, 1000, f1));
+    EXPECT_LE(20 / 3 + 0.0001, integration(0, 2, 1000, f1));
+    EXPECT_GE(20 / 3 - 0.0001, integration(0, 2, 1000, f1));
 }
 
 int main(int argc, char** argv) {
