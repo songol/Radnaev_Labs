@@ -240,9 +240,6 @@ void huffman_code::decompress() {
 
 
 
-    auto root = tree[0];
-    //std::cout << root->get_key() << std::endl;
-    std::cout << "zalupa" << std::endl;
     auto search = root;
     input.get(let);
     while (!input.eof()) {
