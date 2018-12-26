@@ -1,11 +1,5 @@
-#include <cstdio>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
 #include "huffman_code.hpp"
 
-//#include "binary_heap.hpp"
 
 huffman_code::huffman_code(const char *s1, const char *s2, const char param) {
     data = s1;
@@ -15,12 +9,8 @@ huffman_code::huffman_code(const char *s1, const char *s2, const char param) {
         build_tree();
         std::string code = "";
         int32_t root = tree.size() - 1;
-        size_of_tree = 0;
         build_code_table(tree[root], code);
         std::reverse(code_tree.begin(), code_tree.end());
-
-        show_frequency_table();
-        show_code_table();
         compress();
     } else {
         decompress();
@@ -38,23 +28,19 @@ void huffman_code::build_frequency_table() {
     char let = 'a';
     input.open(data);
     input.get(let);        
-
     while (!input.eof()) {
             if (frequency_table.find(let) == frequency_table.end()) {
                 frequency_table[let] = 1;
             } else {
                 frequency_table[let]++;
             }
-            input.get(let);        
-
+            input.get(let);
     }
     input.close();
-    numb_of_characters = frequency_table.size();
 }
 
 void huffman_code::build_code_table(huffman_node* root, std::string code) {
     if (root->get_left() == std::nullptr_t() && root->get_right() == std::nullptr_t()) {
-
         std::vector<bool> bool_code;
         for (auto a : code) bool_code.push_back (a == '1');
         code_table[root->get_letter()] = bool_code;
@@ -65,7 +51,6 @@ void huffman_code::build_code_table(huffman_node* root, std::string code) {
     }   
     if (root->get_right() != std::nullptr_t()) {
         build_code_table((root->get_right()), code + "1");
-//        code_tree.push_back('0');
     }
 }
 
@@ -133,20 +118,13 @@ void huffman_code::show_code_table() {
     }
 }
 
-/*void huffman_code::encode_tree(huffman_node* root) {
-    char code = 0;
-    if (root->get_left() == std::nullptr_t() && 
-        root->get_right() == std::nullptr_t()) {
-        code = 1;
-        output.write((char*) &code, sizeof(char));
-        output.write((char*) &(root->get_letter()), sizeof(char));
-    } else {
-        code = 0;
-        output.write(&code, sizeof(char));
-        encode_tree(root->get_left(), output);
-        encode_tree(root->get_right(), output);
+int32_t huffman_code::getnumb_of_char() {
+    int32_t res = 0;
+    for (auto it = code_table.begin(); it != code_table.end(); ++it) {
+        res += (it->second).size() * frequency_table[it->first];
     }
-}*/
+    return res;
+}
 
 void huffman_code::compress() {
     encode_tree(tree[tree.size() - 1]);
@@ -154,15 +132,15 @@ void huffman_code::compress() {
     std::ifstream input;
     char let = 'a';
     input.open(data);
-    std::ofstream output;   
+    std::ofstream output;
     output.open(out, std::ios::binary);
     char code = 0;
     int32_t bitcount = 0;
     input.get(let);
+    numb_of_characters = getnumb_of_char();
     output.write((char*) &numb_of_characters, sizeof(int32_t));
     output.write((char*) &size_of_tree, sizeof(int32_t));
     for (auto it = code_tree.begin(); it != code_tree.end(); ++it) {
-        std::cout << *it;
         output.write((char*) &(*it), sizeof(char));
     }
     while (!input.eof()) {
@@ -190,6 +168,8 @@ void huffman_code::compress() {
     }
     output.close();
     input.close();
+    std::cout << "Compression complete!" << std::endl;
+    return;
 }
 
 std::vector<bool> huffman_code::char_to_byte(char c){
@@ -204,50 +184,72 @@ std::vector<bool> huffman_code::char_to_byte(char c){
     return res; 
 }
 
-huffman_node* huffman_code::rebuild_tree(char letter) {
-    for (int32_t i = 0; i < size_of_tree; ++i) {
-        if (letter) {
-
+huffman_node* huffman_code::rebuild_tree() {
+    std::stack<huffman_node*> stack;
+    char q = '1';
+    if (code_tree[0] == q) {
+        huffman_node* root = new huffman_node(code_tree[1], 1);
+        return root;
+    } else {
+        huffman_node* root = new huffman_node();
+        stack.push(root);
+        for (int32_t i = 1; i < code_tree.size(); ++i) {
+            while (!stack.empty() && stack.top()->get_left() != std::nullptr_t() &&
+                stack.top()->get_right() != std::nullptr_t()) {
+                stack.pop();
+            }
+            if (code_tree[i] == '1') {
+                if (stack.top()->get_left() == std::nullptr_t()) {
+                    auto b = new huffman_node(code_tree[i + 1], 1);
+                    ++i;
+                    stack.top()->left = b;
+                } else {  
+                    auto b = new huffman_node(code_tree[i + 1], 1);
+                    ++i;
+                    stack.top()->right = b;
+                }
+            } else {
+                if (stack.top()->get_left() == std::nullptr_t()) {
+                    auto b = new huffman_node();
+                    stack.top()->left = b;
+                    stack.push(b);
+                } else {
+                    auto b = new huffman_node();
+                    stack.top()->right = b;
+                    stack.push(b);
+                }
+            }
         }
-    }
-    std::cout << std::endl;
+        return root;
+    }  
 }
-
 
 void huffman_code::decompress() {
     std::ifstream input;
-    char let = 'a';
+    std::ofstream output;
     input.open(data, std::ios::in | std::ios::binary);
+    output.open(out);
+
+    char let = 'a';
     input.read((char*) &numb_of_characters, sizeof(int32_t));
-    std::cout << numb_of_characters << std::endl;
     input.read((char*) &size_of_tree, sizeof(int32_t));
-    std::cout << size_of_tree << std::endl;
-    code_tree.resize(size_of_tree, '1');
-
+    
+    code_tree.resize(size_of_tree);
     for (int32_t i = 0; i < size_of_tree; ++i) {
-        //std::cout << i << std::endl;
-
         input.get(let);
         code_tree[i] = let;
-        //input.read((char*) &code_tree[i], sizeof(char));
-        std::cout << let << " ";
     }
-    std::cout << std::endl;
-
-    rebuild_tree();
-
-
-
-
-
+    auto root = rebuild_tree();
     auto search = root;
+    int32_t count = 0;
     input.get(let);
+
     while (!input.eof()) {
         auto code = char_to_byte(let);
         for (int32_t i = 0; i < 8; ++i) {
             if (search->get_left() == std::nullptr_t() &&
                 search->get_right() == std::nullptr_t()) {
-                std::cout << search->get_letter();
+                output << search->get_letter();
                 search = root;
             } 
             if (code[i] == 1) {
@@ -255,9 +257,16 @@ void huffman_code::decompress() {
             } else {
                 search = search->get_left();
             }
+            if (count > numb_of_characters) {
+                break;
+            }
+            count++;
         }
         input.get(let);
     }
+    output.close();
     input.close();
+    std::cout << "Decompression complete!" << std::endl;
+
     return;
 }
