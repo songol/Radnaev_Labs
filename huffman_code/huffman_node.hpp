@@ -11,8 +11,9 @@ private:
     int32_t key;
     char letter;
     std::string code;
-    huffman_node *left, *right;
+    
 public:
+    huffman_node *left, *right;
     huffman_node();
     huffman_node(char letter, int32_t key);
     huffman_node(huffman_node* left, huffman_node* right);

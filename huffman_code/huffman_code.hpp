@@ -2,9 +2,13 @@
 #define HUFFMAN_CODE_H
 #include <string>
 #include <map>
+#include <cstdio>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <stack>
 #include "huffman_node.hpp"
-
-//#include "BinaryHeap.h"
 
 class huffman_code {
 private:
@@ -21,13 +25,15 @@ private:
     void build_code_table(huffman_node* root, std::string code);
     void build_tree();
     std::vector<bool> char_to_byte(char c);
+    int32_t getnumb_of_char();
+    void encode_tree(huffman_node* root);
+
 public:
     huffman_code();
     huffman_code(const char *s1, const char *s2, const char param);
-    void encode_tree(huffman_node* root);
+    ~huffman_code();
     void compress();
     void decompress();
-    ~huffman_code();
     void show_frequency_table();
     void show_code_table();
 };
