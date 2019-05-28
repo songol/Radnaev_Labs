@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.12)
+project(mylife)
+set(EXECUTABLE_NAME "MySFML")
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
+
+file(GLOB CPPS "*.cpp")
+add_definitions(-Wall)
+
+set(SOURCE_EXE main.cpp)
+set(SOURCE_LIB life.cpp)
+
+add_library(field_lib STATIC ${SOURCE_LIB})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+find_package(SFML REQUIRED graphics window system)
+add_executable(${PROJECT_NAME} ${SOURCE_EXE})
+target_link_libraries(${PROJECT_NAME} field_lib ${SFML_LIBRARIES})
+add_executable(mylife main.cpp life.cpp life.h)
