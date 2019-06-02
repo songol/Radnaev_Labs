@@ -79,6 +79,7 @@ lab04_EXTERNAL_OBJECTS =
 
 lab04: CMakeFiles/lab04.dir/main.cpp.o
 lab04: CMakeFiles/lab04.dir/build.make
+lab04: /usr/lib/x86_64-linux-gnu/libgtest.a
 lab04: CMakeFiles/lab04.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/songol/Suralsal/lab04/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable lab04"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lab04.dir/link.txt --verbose=$(VERBOSE)

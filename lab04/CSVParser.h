@@ -8,13 +8,15 @@
 #include <sstream>
 #include <exception>
 #include <utility>
+#include <fstream>
 
 template <typename... Args>
 class CSVParser {
     friend class CSV_iterator<Args...>;
+    friend struct CSVParserTest;
 
 public:
-    explicit CSVParser(std::ifstream& file, int skip_lines = 0, char separator = ',', char shield = '"') :
+    CSVParser(std::ifstream& file, int skip_lines = 0, char separator = ',', char shield = '"') :
             file_(file), start_line(skip_lines), separator_(separator), end_of_file_(false), num_of_columns_(sizeof...(Args)), shield_(shield) {
         if (separator_ == shield_) {
             throw std::runtime_error(std::string("Сепаратор и символ экранирования не должны совпадать"));
@@ -106,6 +108,36 @@ private:
     std::string str_;
 };
 
+TEST(CSVParser, TestForThrow) {
+    CSVParser<int, int, int> *parser;
+    std::ifstream file("gogogo.csv");
+    parser = new CSVParser<int, int, int> (file, 0);
+    ASSERT_ANY_THROW({
+        for (std::tuple<int, int, int> rs : *parser) {
+        }
+    });
+}
+
+TEST(CSVParser, TestNoThrow) {
+    CSVParser<std::string, std::string, std::string> *parser;
+    std::ifstream file("gogogo.csv");
+    parser = new CSVParser<std::string, std::string, std::string> (file, 0);
+    ASSERT_NO_THROW({
+        for (std::tuple<std::string, std::string, std::string> rs : *parser) {
+        }
+    });
+}
+
+TEST(CSVParser, GoodParsing) {
+    CSVParser<std::string, double, double> *parser;
+    std::ifstream file("gogogo.csv");
+    parser = new CSVParser<std::string, double, double> (file, 3);
+    for (std::tuple<std::string, double, double> rs : *parser) {
+        EXPECT_EQ("\"lalla\"", std::get<0>(rs));
+        EXPECT_DOUBLE_EQ(9218, std::get<1>(rs));
+        EXPECT_DOUBLE_EQ(35.7890, std::get<2>(rs));
+    }
+}
 
 
 #endif //LAB04_CSVPARSER_H

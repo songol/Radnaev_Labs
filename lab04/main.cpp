@@ -11,14 +11,16 @@
 #include <tuple>
 #include "CSVParser.h"
 
-
 int main(int argc, char* argv[]) {
     std::ifstream file("gogogo.csv");
-    CSVParser<std::string, std::string, float> parser(file, 0s);
+    CSVParser<std::string, std::string, float> parser(file, 0);
 
     for (std::tuple<std::string, std::string, float> rs : parser) {
          std::cout << rs << std::endl;
     }
+
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 
     return 0;
 }

@@ -6,11 +6,11 @@
 #define LAB04_CSV_ITERATOR_H
 #include <iostream>
 #include <algorithm>
-#include <fstream>
 #include <string>
 #include <vector>
 #include <type_traits>
 #include <tuple>
+#include <gtest/gtest.h>
 
 namespace internal {
     template <size_t index, typename ... Args>
@@ -27,7 +27,6 @@ std::ostream& operator<<(std::ostream& stream, const std::tuple<Args...>& my_tup
     internal::tuple_printer<0>(stream, my_tuple);
     return stream;
 }
-
 
 template <typename...>
 class CSVParser;
