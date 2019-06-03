@@ -25,8 +25,10 @@ cmake /lab04
 
 ### Tests
 
-Tests will be added soon...
 
+```
+./lab04 -test
+```
 
 ## Authors
 
