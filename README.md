@@ -26,8 +26,9 @@ make
 
 ### Tests
 
-Tests will be added soon...
-
+```
+./try_2 -test
+```
 
 ## Authors
 
