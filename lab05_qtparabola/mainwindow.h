@@ -1,9 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <gtest/gtest.h>
 #include <QMainWindow>
-#include <QImage>
-#include <QPainter>
 #include <QGridLayout>
 #include <QtCharts/QtCharts>
 #include <QLineEdit>
@@ -19,7 +17,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    qreal parabola(qreal a, qreal b, qreal c, qreal x);
 public Q_SLOTS:
     void drawMyFuncion();
     
@@ -33,7 +31,7 @@ private:
     QLineEdit *a_val, *b_val, *c_val;
 
 
-    qreal parabola(qreal x);
+
 
     Ui::MainWindow *ui;
 

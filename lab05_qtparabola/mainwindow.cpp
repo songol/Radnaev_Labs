@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     c_val = new QLineEdit();
     QRegExp rx("\\[.]\\d{0,10}");
     a_val->setValidator(new QRegExpValidator(rx,this));
-    b_val->setValidator(new QDoubleValidator(-100.0, 100.0, 2));
-    c_val->setValidator(new QDoubleValidator(-100.0, 100.0, 2));
+    b_val->setValidator(new QRegExpValidator(rx,this));
+    c_val->setValidator(new QRegExpValidator(rx,this));
     a_val->setText("0.0");
     b_val->setText("0.0");
     c_val->setText("0.0");
@@ -46,9 +46,31 @@ void MainWindow::drawMyFuncion() {
     qreal xmin = -1;
     qreal xmax = 1;
     qreal dx = 0.1;
+    qreal a;
+    qreal b;
+    qreal c;
+    if (a_val->text().isEmpty()){
+        a = 0;
+        a_val->setText("0.0");
+    } else {
+        a = a_val->text().toDouble();
+    }
+    if (b_val->text().isEmpty()){
+        b= 0;
+        b_val->setText("0.0");
+    } else {
+        b = b_val->text().toDouble();
+    }
+    if (c_val->text().isEmpty()){
+        c = 0;
+        c_val->setText("0.0");
+    } else {
+        c = c_val->text().toDouble();
+    }
+
     QLineSeries *series = new QLineSeries();
     for (qreal x = xmin; x < xmax; x += dx) {
-        series->append(x, parabola(x));
+        series->append(x, parabola(a, b, c, x));
     }
     series->setName("Parabola");
     m_chart->addSeries(series);
@@ -72,28 +94,27 @@ void MainWindow::drawMyFuncion() {
 
 }
 
-qreal MainWindow::parabola(qreal x){
-    qreal a;
-    qreal b;
-    qreal c;
-    if (a_val->text().isEmpty()){
-        a = 0;
-        a_val->setText("0.0");
-    } else {
-        a = a_val->text().toDouble();
-    }
-    if (b_val->text().isEmpty()){
-        b= 0;
-        b_val->setText("0.0");
-    } else {
-        b = b_val->text().toDouble();
-    }
-    if (c_val->text().isEmpty()){
-        c = 0;
-        c_val->setText("0.0");
-    } else {
-        c = c_val->text().toDouble();
-    }
-
+qreal MainWindow::parabola(qreal a, qreal b, qreal c, qreal x){
     return  a * x * x + b * x + c;
+}
+
+TEST(parabola, parabolaTest) {
+    auto w = new MainWindow;
+    qreal a = w->parabola(1, 3, 4, 5);
+    EXPECT_DOUBLE_EQ(a, 44);
+}
+TEST(parabola, parabolaTest2) {
+    auto w = new MainWindow;
+    qreal a = w->parabola(0, -3, 1, 3.2);
+    EXPECT_DOUBLE_EQ(a, -8.6);
+}
+TEST(parabola, parabolaTest3) {
+    auto w = new MainWindow;
+    qreal a = w->parabola(4, 5, 1, 0);
+    EXPECT_DOUBLE_EQ(a, 1);
+}
+TEST(parabola, parabolaTest4) {
+    auto w = new MainWindow;
+    qreal a = w->parabola(49, 14, -0.5, 16);
+    EXPECT_DOUBLE_EQ(a, 12767.5);
 }

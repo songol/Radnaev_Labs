@@ -3,6 +3,7 @@
 # Project created by QtCreator 2019-05-29T11:28:52
 #
 #-------------------------------------------------
+include(gtest_dependency.pri)
 
 QT       += core gui
 QT += charts
