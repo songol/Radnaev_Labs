@@ -1,5 +1,39 @@
-# Radnaev_Labs
-Realized Conway's game life.
-In file gun.txt written starting position for glider gun
-In file glider.txt written starting position for glider
-In file LWSS.txt written starting position for LWSS 
+# Parabola plotter by Radnaev Tumen
+
+Parabora plotter implementation
+
+## Details
+
+Made by QT
+
+
+### Requirements
+
+
+```
+CMake VERSION 3.12.1
+```
+
+### Build-up
+
+Just write in terminal
+
+```
+qmake
+make
+```
+
+
+### Tests
+
+```
+./try_2 -test
+```
+
+## Authors
+
+**Radnaev Tumen, MMF NSU**
+
+
+All right reserved 
+
